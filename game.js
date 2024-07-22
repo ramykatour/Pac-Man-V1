@@ -15,17 +15,24 @@ window.onload = async function() {
 
 async function connectWallet() {
     await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const accounts = await web3.eth.getAccounts();
+    if (accounts.length > 0) {
+        const account = accounts[0];
+        const shortenedAccount = `${account.slice(0, 5)}...${account.slice(-5)}`;
+        document.getElementById('connectButton').innerText = shortenedAccount;
+    }
 }
 
 async function submitScore() {
     const accounts = await web3.eth.getAccounts();
-    const score = getScoreFromGame();
-    await gameToken.methods.rewardPlayer(accounts[0], score).send({ from: accounts[0] });
+    const playerScore = getScoreFromGame();
+    await gameToken.methods.rewardPlayer(accounts[0], playerScore).send({ from: accounts[0] });
     alert('Score submitted and reward received!');
+    resetGame();
 }
 
 function getScoreFromGame() {
-    return score;
+    return score; // Placeholder for actual game score
 }
 
 // Snake Game Code
@@ -138,4 +145,5 @@ function resetGame() {
     snake = [{ x: 100, y: 100 }];
     dx = gridSize;
     dy = 0;
+    updateScore();
 }

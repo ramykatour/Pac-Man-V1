@@ -10,11 +10,13 @@
             color: #fff; 
             font-family: Arial, sans-serif; 
         }
-        canvas { 
-            border: 1px solid #fff; 
-            display: block; 
-            margin: auto; 
+        canvas {
+            border: 1px solid #a5a12a;
+            display: block;
+            margin: auto;
             background-color: #000;
+            filter: drop-shadow(0px 0px 6px gold);
+            border-radius: 25px;
         }
         #score { 
             font-size: 24px; 
@@ -41,9 +43,10 @@
         <canvas id="gameCanvas" width="640" height="640"></canvas>
         <div id="score">Score: 0</div>
     </div>
-    <button onclick="connectWallet()">Connect Wallet</button>
-    <button onclick="submitScore()">Submit Score</button>
-
+    <button id="connectButton" onclick="connectWallet()">Connect Wallet</button>
+    <button onclick="submitScore()">Claim Score</button>
+	<p>CopyRight RamyKatour 2024</p>
+	<p>Use Bscscan TestNet</p>
     <script src="game.js"></script>
 </body>
 </html>
