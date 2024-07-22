@@ -25,18 +25,20 @@ async function submitScore() {
 }
 
 function getScoreFromGame() {
-    return score; // Placeholder for actual game score
+    return score;
 }
 
-// Pac-Man Game Code
+// Snake Game Code
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const gridSize = 20;
 const width = canvas.width;
 const height = canvas.height;
 let score = 0;
-let pacMan = { x: 0, y: 0, dx: gridSize, dy: 0, size: gridSize };
-let food = { x: 100, y: 100, size: gridSize };
+let snake = [{ x: 100, y: 100 }];
+let dx = gridSize;
+let dy = 0;
+let food = { x: 200, y: 200, size: gridSize };
 
 function initGame() {
     document.addEventListener("keydown", changeDirection);
@@ -44,47 +46,69 @@ function initGame() {
 }
 
 function gameLoop() {
-    movePacMan();
+    moveSnake();
     checkFoodCollision();
     clearCanvas();
-    drawPacMan();
+    drawSnake();
     drawFood();
     updateScore();
 }
 
-function movePacMan() {
-    pacMan.x += pacMan.dx;
-    pacMan.y += pacMan.dy;
+function moveSnake() {
+    const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+    snake.unshift(head);
 
-    if (pacMan.x >= width) pacMan.x = 0;
-    if (pacMan.y >= height) pacMan.y = 0;
-    if (pacMan.x < 0) pacMan.x = width - gridSize;
-    if (pacMan.y < 0) pacMan.y = height - gridSize;
+    if (head.x === food.x && head.y === food.y) {
+        score += 10;
+        food.x = Math.floor(Math.random() * (width / gridSize)) * gridSize;
+        food.y = Math.floor(Math.random() * (height / gridSize)) * gridSize;
+    } else {
+        snake.pop();
+    }
+
+    if (head.x >= width) head.x = 0;
+    if (head.y >= height) head.y = 0;
+    if (head.x < 0) head.x = width - gridSize;
+    if (head.y < 0) head.y = height - gridSize;
+
+    for (let i = 1; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+            resetGame();
+        }
+    }
 }
 
 function changeDirection(event) {
     switch (event.keyCode) {
         case 37: // left
-            pacMan.dx = -gridSize;
-            pacMan.dy = 0;
+            if (dx === 0) {
+                dx = -gridSize;
+                dy = 0;
+            }
             break;
         case 38: // up
-            pacMan.dx = 0;
-            pacMan.dy = -gridSize;
+            if (dy === 0) {
+                dx = 0;
+                dy = -gridSize;
+            }
             break;
         case 39: // right
-            pacMan.dx = gridSize;
-            pacMan.dy = 0;
+            if (dx === 0) {
+                dx = gridSize;
+                dy = 0;
+            }
             break;
         case 40: // down
-            pacMan.dx = 0;
-            pacMan.dy = gridSize;
+            if (dy === 0) {
+                dx = 0;
+                dy = gridSize;
+            }
             break;
     }
 }
 
 function checkFoodCollision() {
-    if (pacMan.x === food.x && pacMan.y === food.y) {
+    if (snake[0].x === food.x && snake[0].y === food.y) {
         score += 10;
         food.x = Math.floor(Math.random() * (width / gridSize)) * gridSize;
         food.y = Math.floor(Math.random() * (height / gridSize)) * gridSize;
@@ -95,9 +119,9 @@ function clearCanvas() {
     ctx.clearRect(0, 0, width, height);
 }
 
-function drawPacMan() {
+function drawSnake() {
     ctx.fillStyle = "yellow";
-    ctx.fillRect(pacMan.x, pacMan.y, pacMan.size, pacMan.size);
+    snake.forEach(part => ctx.fillRect(part.x, part.y, gridSize, gridSize));
 }
 
 function drawFood() {
@@ -107,4 +131,11 @@ function drawFood() {
 
 function updateScore() {
     document.getElementById("score").innerText = `Score: ${score}`;
+}
+
+function resetGame() {
+    score = 0;
+    snake = [{ x: 100, y: 100 }];
+    dx = gridSize;
+    dy = 0;
 }
