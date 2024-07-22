@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pac-Man Game</title>
+    <style>
+        body { text-align: center; }
+        canvas { border: 1px solid black; display: block; margin: auto; }
+        #score { font-size: 24px; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.3.0/dist/web3.min.js"></script>
+</head>
+<body>
+    <h1>Pac-Man Game</h1>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="640" height="640"></canvas>
+        <div id="score">Score: 0</div>
+    </div>
+    <button onclick="connectWallet()">Connect Wallet</button>
+    <button onclick="submitScore()">Submit Score</button>
+
+    <script src="game.js"></script>
+</body>
+</html>
